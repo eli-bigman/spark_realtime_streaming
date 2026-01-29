@@ -1,0 +1,5 @@
+Host: localhost
+Port: 5432
+User: spark_user
+Password: spark_password
+Database: ecommerce_db
