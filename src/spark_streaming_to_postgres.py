@@ -43,19 +43,17 @@ def write_to_postgres(batch_df, batch_id):
     
     db_properties = settings.get_db_properties()
     
-    try:
-        batch_df.write \
-            .format("jdbc") \
-            .option("url", jdbc_url) \
-            .option("dbtable", "ecommerce_events") \
-            .option("user", db_properties["user"]) \
-            .option("password", db_properties["password"]) \
-            .option("driver", db_properties["driver"]) \
-            .mode("append") \
-            .save()
-        print(f"Successfully wrote batch {batch_id} to Postgres.")
-    except Exception as e:
-        print(f"Error writing batch {batch_id} to Postgres: {e}")
+    print(f"Writing batch {batch_id} to Postgres...")
+    batch_df.write \
+        .format("jdbc") \
+        .option("url", jdbc_url) \
+        .option("dbtable", "ecommerce_events") \
+        .option("user", db_properties["user"]) \
+        .option("password", db_properties["password"]) \
+        .option("driver", db_properties["driver"]) \
+        .mode("append") \
+        .save()
+    print(f"Successfully wrote batch {batch_id} to Postgres.")
 
 def main():
     spark = get_spark_session()
