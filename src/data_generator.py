@@ -1,10 +1,15 @@
 import os
+import sys
 import time
 import json
 import uuid
 import random
 from datetime import datetime
 from faker import Faker
+
+# Add the project root directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from config.settings import settings
 
 # Initialize Faker
