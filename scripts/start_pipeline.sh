@@ -5,7 +5,8 @@ echo "Starting Spark Realtime Streaming Pipeline..."
 
 # 1. Start Infrastructure
 echo "Building and starting Docker containers..."
-docker compose up -d --build
+docker compose build --no-cache
+docker compose up -d
 
 # 2. Wait for Postgres
 echo "Waiting for Postgres to be ready..."
