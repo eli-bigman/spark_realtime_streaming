@@ -36,15 +36,17 @@ graph LR
 Clone the repository and navigate to the project folder.
 
 ```bash
-# Verify directory structure
-ls -R
+# Clone project
+git clone https://github.com/eli-bigman/spark_realtime_streaming.git
+
+cd spark_realtime_streaming.git
 ```
 
 ### 2. Start Services
 Launch the Spark and PostgreSQL containers in the background.
 
 ```bash
-docker-compose up -d
+./scripts/start_pipeline.sh
 ```
 Check status:
 ```bash
