@@ -19,7 +19,7 @@ class Settings:
     
     @classmethod
     def get_jdbc_url(cls):
-        return f"jdbc:postgresql://{cls.POSTGRES_HOST}:{cls.POSTGRES_PORT}/{cls.POSTGRES_DB}"
+        return f"jdbc:postgresql://{cls.POSTGRES_HOST}:{cls.POSTGRES_PORT}/{cls.POSTGRES_DB}?stringtype=unspecified"
     
     @classmethod
     def get_db_properties(cls):
