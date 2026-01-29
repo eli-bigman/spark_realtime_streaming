@@ -1,8 +1,13 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col, to_timestamp, current_timestamp
 from pyspark.sql.types import StructType, StructField, StringType, TimestampType
-from config.settings import settings
+import sys
 import os
+
+# Add the project root directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from config.settings import settings
 
 def get_spark_session():
     """
