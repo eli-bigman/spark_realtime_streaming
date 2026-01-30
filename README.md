@@ -43,7 +43,6 @@ cd spark_realtime_streaming.git
 ```
 
 ### 2. Start Services
-### 2. Start Services
 Launch the entire pipeline (Spark, Postgres, Data Generator) automatically:
 
 ```bash
