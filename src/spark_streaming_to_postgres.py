@@ -63,6 +63,10 @@ def main():
     
     # 1. Read Stream
     print(f"Monitoring directory: {settings.INPUT_DATA_DIR}")
+    
+    # Ensure input directory exists
+    os.makedirs(settings.INPUT_DATA_DIR, exist_ok=True)
+    
     raw_df = spark.readStream \
         .format("json") \
         .schema(get_schema()) \
