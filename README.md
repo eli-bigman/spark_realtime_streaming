@@ -43,52 +43,48 @@ cd spark_realtime_streaming.git
 ```
 
 ### 2. Start Services
-Launch the Spark and PostgreSQL containers in the background.
+### 2. Start Services
+Launch the entire pipeline (Spark, Postgres, Data Generator) automatically:
 
 ```bash
-./scripts/start_pipeline.sh
+docker compose up --build
 ```
-Check status:
-```bash
-docker ps
-```
+*Note: You can also use `./scripts/start_pipeline.sh` for a guided startup.*
 
-### 3. Generate Data
-You can run the generator locally or inside the `spark-app` container.
+### 3. Monitor Pipeline
+The system starts generating and processing data immediately. Here is how to monitor it:
 
-**Running inside container (Recommended):**
-```bash
-# Open a shell in the spark container
-docker exec -it spark-realtime-app /bin/bash
+**A. Access Spark UI**
+Go to [http://localhost:4040](http://localhost:4040) to view the streaming job status, input rates, and processing metrics.
 
-# Run the generator
-python src/data_generator.py
-```
-*Leave this running. It will produce JSON files in `data/input`.*
+**B. Watch Database Growth (Real-time)**
+1. Connect to the database:
+   ```bash
+   docker exec -it postgres-db psql -U spark_user -d ecommerce_db
+   ```
+2. Run the count query:
+   ```sql
+   SELECT count(*) FROM ecommerce_events;
+   ```
+3. Turn on watch mode (updates every 1 second):
+   ```sql
+   \watch 1
+   ```
+*(Press Ctrl+C to exit)*
 
-### 4. Run Spark Streaming Job
-Open a **new terminal** (host or container) to submit the PySpark job.
-
-```bash
-# Inside the container
-docker exec -it spark-realtime-app /bin/bash
-
-# Submit the job (Postgres driver is handled by configuring jars)
-spark-submit --packages org.postgresql:postgresql:42.7.2 src/spark_streaming_to_postgres.py
-```
-
-### 5. Verify Data in PostgreSQL
-Connect to the database to confirm data ingestion.
-
+**C. Query Data (SQL Shell)**
+Connect to the database manually:
 ```bash
 docker exec -it postgres-db psql -U spark_user -d ecommerce_db
 ```
-
-Run SQL query:
+Run queries:
 ```sql
-SELECT count(*) FROM ecommerce_events;
 SELECT * FROM ecommerce_events ORDER BY timestamp DESC LIMIT 5;
 ```
+
+**D. View Logs**
+- **Spark Job**: `docker logs -f spark-streaming-job`
+- **Data Generator**: `docker logs -f data-generator`
 
 ## Project Structure
 
