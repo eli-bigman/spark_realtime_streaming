@@ -48,6 +48,10 @@ def save_event_to_file(event):
 
 def main():
     print(f"Starting data generator. Writing to {settings.INPUT_DATA_DIR}")
+    
+    # Ensure input directory exists
+    os.makedirs(settings.INPUT_DATA_DIR, exist_ok=True)
+    
     print(f"Rate: {settings.EVENTS_PER_SECOND} events/second. Press Ctrl+C to stop.")
     
     delay = 1.0 / settings.EVENTS_PER_SECOND
