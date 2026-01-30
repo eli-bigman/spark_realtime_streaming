@@ -33,18 +33,21 @@ def generate_event():
     }
     return event
 
-def save_event_to_file(event):
-    """Save event to a JSON file in the input directory."""
+def save_batch_to_file(events):
+    """Save a list of events to a single JSON file (NDJSON format)."""
     # Ensure input directory exists
     os.makedirs(settings.INPUT_DATA_DIR, exist_ok=True)
     
-    filename = f"event_{event['event_id']}.json"
+    batch_id = str(uuid.uuid4())
+    filename = f"batch_{batch_id}.json"
     filepath = os.path.join(settings.INPUT_DATA_DIR, filename)
     
     with open(filepath, 'w') as f:
-        json.dump(event, f)
+        for event in events:
+            json.dump(event, f)
+            f.write('\n')
     
-    print(f"Generated event: {filename}")
+    print(f"Generated batch: {filename} ({len(events)} events)")
 
 def main():
     print(f"Starting data generator. Writing to {settings.INPUT_DATA_DIR}")
@@ -52,14 +55,19 @@ def main():
     # Ensure input directory exists
     os.makedirs(settings.INPUT_DATA_DIR, exist_ok=True)
     
-    print(f"Rate: {settings.EVENTS_PER_SECOND} events/second. Press Ctrl+C to stop.")
+    print(f"Rate: One batch every {1.0/settings.EVENTS_PER_SECOND:.2f} seconds.")
+    print("Batch size: Random (1-5 events).")
+    print("Press Ctrl+C to stop.")
     
     delay = 1.0 / settings.EVENTS_PER_SECOND
     
     try:
         while True:
-            event = generate_event()
-            save_event_to_file(event)
+            # Generate random batch size between 1 and 5
+            batch_size = random.randint(1, 5)
+            batch = [generate_event() for _ in range(batch_size)]
+            
+            save_batch_to_file(batch)
             time.sleep(delay)
     except KeyboardInterrupt:
         print("\nStopping data generator.")
