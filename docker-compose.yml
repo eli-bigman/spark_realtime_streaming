@@ -1,25 +1,42 @@
 services:
-  spark:
+  spark-job:
     build: .
     image: spark-realtime-custom
-    container_name: spark-realtime-app
+    container_name: spark-streaming-job
     ports:
-      - "8888:8888" # Jupyter Lab
-      - "4041:4040" # Spark UI
+      - "4040:4040"
     environment:
-      - JUPYTER_ENABLE_LAB=yes
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
+      - INPUT_DATA_DIR=./data/input
+      - EVENTS_PER_SECOND=${EVENTS_PER_SECOND:-2.0}
     volumes:
       - ./:/home/jovyan/work
-      - ./data:/home/jovyan/work/data
+    working_dir: /home/jovyan/work
     networks:
       - spark-net
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    command: >
+      spark-submit  --packages org.postgresql:postgresql:42.7.2  src/spark_streaming_to_postgres.py
+
+  data-generator:
+    build: .
+    image: spark-realtime-custom
+    container_name: data-generator
+    environment:
+      - INPUT_DATA_DIR=./data/input
+      - EVENTS_PER_SECOND=${EVENTS_PER_SECOND:-2.0}
+    volumes:
+      - ./:/home/jovyan/work
+    working_dir: /home/jovyan/work
+    networks:
+      - spark-net
+    command: python src/data_generator.py
 
   postgres:
     image: postgres:15
