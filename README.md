@@ -120,6 +120,14 @@ SELECT * FROM ecommerce_events ORDER BY timestamp DESC LIMIT 5;
 
 ## Testing
 
-- **Data Generator**: Verify JSON files appear in `data/input`.
-- **Database**: Check `ecommerce_events` table exists in Postgres.
-- **End-to-End**: Run the pipeline and ensure row count in Postgres increases.
+System tests are integrated into the Docker pipeline.
+
+### Run Automated Tests
+To run the end-to-end test suite (`pytest`), use the `test` profile:
+```bash
+docker compose run --rm tests
+```
+This will:
+1. Start Postgres (if not running).
+2. Run the `tests/test_pipeline.py` script.
+3. Verify database connectivity, table creation, and real-time data ingestion.
