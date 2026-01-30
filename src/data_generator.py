@@ -39,7 +39,7 @@ def save_batch_to_file(events):
     os.makedirs(settings.INPUT_DATA_DIR, exist_ok=True)
     
     batch_id = str(uuid.uuid4())
-    filename = f"batch_{batch_id}.json"
+    filename = f"batch_{batch_id}.jsonl"
     filepath = os.path.join(settings.INPUT_DATA_DIR, filename)
     
     with open(filepath, 'w') as f:
