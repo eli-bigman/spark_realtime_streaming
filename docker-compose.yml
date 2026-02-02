@@ -13,6 +13,7 @@ services:
       - POSTGRES_PORT=5432
       - INPUT_DATA_DIR=./data/input
       - EVENTS_PER_SECOND=${EVENTS_PER_SECOND:-2.0}
+      - BATCH_PROCESSING_TIME=${BATCH_PROCESSING_TIME:-5}
     volumes:
       - ./:/home/jovyan/work
     working_dir: /home/jovyan/work
