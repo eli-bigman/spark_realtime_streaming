@@ -16,6 +16,7 @@ class Settings:
     # App Settings
     INPUT_DATA_DIR = os.getenv("INPUT_DATA_DIR", "./data/input")
     EVENTS_PER_SECOND = float(os.getenv("EVENTS_PER_SECOND", 1.0))
+    BATCH_PROCESSING_TIME = int(os.getenv("BATCH_PROCESSING_TIME", 5))  # seconds
     
     @classmethod
     def get_jdbc_url(cls):
