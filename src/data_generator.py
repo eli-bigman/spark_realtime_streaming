@@ -16,12 +16,26 @@ from config.settings import settings
 fake = Faker()
 
 def generate_event():
-    """Generate a single fake e-commerce event."""
+    """Generate a single fake e-commerce event with enhanced fields."""
     event_types = ['view', 'click', 'purchase', 'add_to_cart']
+    
+    # Product categories for e-commerce
+    product_categories = [
+        'Electronics', 'Clothing', 'Home & Garden', 'Books',
+        'Sports & Outdoors', 'Toys & Games', 'Beauty & Personal Care', 'Food & Beverages'
+    ]
+    
+    event_type = random.choice(event_types)
+    
+    # Generate realistic quantity based on event type
+    if event_type in ['purchase', 'add_to_cart']:
+        quantity = random.randint(1, 10)
+    else:
+        quantity = 1  # For view/click, quantity is always 1
     
     event = {
         "event_id": str(uuid.uuid4()),
-        "event_type": random.choice(event_types),
+        "event_type": event_type,
         "user_id": fake.uuid4(),
         "product_id": fake.uuid4(),
         "timestamp": datetime.now().isoformat(),
@@ -29,7 +43,13 @@ def generate_event():
             "device": random.choice(['mobile', 'desktop', 'tablet']),
             "browser": random.choice(['chrome', 'firefox', 'safari']),
             "location": fake.country_code()
-        }
+        },
+        # New fields for enhanced analytics
+        "price": round(random.uniform(9.99, 999.99), 2),
+        "quantity": quantity,
+        "discount_applied": random.choice([True, False, False]),  # 33% chance of discount
+        "product_category": random.choice(product_categories),
+        "session_id": fake.uuid4()  # Each event gets a session_id
     }
     return event
 
@@ -64,7 +84,7 @@ def main():
     try:
         while True:
             # Generate random batch size between 1 and 5
-            batch_size = random.randint(1, 5)
+            batch_size = random.randint(1, 100)
             batch = [generate_event() for _ in range(batch_size)]
             
             save_batch_to_file(batch)
